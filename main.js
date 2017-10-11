@@ -1,4 +1,7 @@
 // Pong Game canvas
+var animate = window.requestAnimationFrame ||
+function(callback) { window.setTimeout(callback, 1000/60) };
+
 var canvas = document.getElementById('a');
 var context = canvas.getContext('2d');
 
@@ -44,6 +47,7 @@ function Paddle(x, y, w, h, c){
     this.w = w;
     this.h = h;
     this.c = c;
+    this.speed = 10;
 }
 
 Paddle.prototype.render = function(context) {
@@ -54,7 +58,31 @@ Paddle.prototype.render = function(context) {
     context.lineWidth = 5;
     context.strokeStyle = 'black';
     context.stroke();
+    this.move = function(key) {
+        context.clearRect(this.x, this.y, this.w, this.h);
+        this.y += key;
+    };
 };
+
+function onKeyDown(e) {
+    // up arrow key
+    if (e.keyCode == 38) {
+        if (player.y >= 10) {
+            player.move(-10);
+        }
+    }
+
+    // down arrow key
+    if (e.keyCode == 40) {
+        if (player.y <= 300) {
+            player.move(10);
+        }
+    }
+}
+
+function addKeyEvents() {
+    window.addEventListener('keydown', onKeyDown, true);
+}
 
 // Ball
 function Ball(x, y) {
@@ -90,6 +118,12 @@ function renderAll(){
     computer.render(context);
 };
 
-window.onload = function(){
+var step = function() {
     renderAll();
+    animate(step);
+};
+
+window.onload = function(){
+    step();
+    addKeyEvents();
 };
