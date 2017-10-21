@@ -11,6 +11,42 @@ function Table(w, h) {
     this.h = h;
 }
 
+// Score
+function Score(x, y) {
+    this.player_score = x;
+    this.computer_score = y;
+}
+
+Score.prototype.update = function(ball) {
+    // Scoring Conditional
+
+    // if (ball.x <= ball.radius) {
+    //     this.player_score += 1;
+    //     if (this.player_score == 11) {
+    //         alert("Player Wins!");
+    //         ball_reset();
+    //     }
+    //     table.resetRound();
+    // } else if (ball.x >= table.w + ball.radius) {
+    //     this.computer_score += 1;
+    //     if (this.computer_score == 11) {
+    //         alert("Computer Wins, better luck next time..");
+    //         ball_reset();
+    //     }
+    //     table.resetRound();
+    // }
+};
+
+Score.prototype.render = function(context) {
+    context.font = "22px sans-serif";
+    context.fillStyle = "#bbb";
+    context.fillText("Score", (canvas.width / 2) - 35, 30);
+
+    context.font = "28px sans-serif";
+    context.fillText(this.computer_score, (canvas.width / 2) - 70, 30);
+    context.fillText(this.player_score, (canvas.width / 2) + 40, 30);
+}
+
 Table.prototype.resetRound = function() {
     ball = new Ball(canvas.width / 2, canvas.height / 2);
 }
@@ -46,13 +82,15 @@ Table.prototype.render = function(context) {
 };
 
 // Paddle constructor
-function Paddle(x, y, w, h, c){
+function Paddle(x, y, w, h, c, b){
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.c = c;
+    this.b = b;
     this.speed = 20;
+    // this.speed.max = 20;
 }
 
 Paddle.prototype.render = function(context) {
@@ -69,6 +107,18 @@ Paddle.prototype.render = function(context) {
     };
 };
 
+Paddle.prototype.update = function(ball) {
+    var comp_y = ball.y;
+
+    // if Paddle obj is Computer
+    if (this.b = true) {
+        if ((canvas.height - this.h) >= ball.y && ball.y >= this.h) {
+            this.y = ball.y - (this.h / 2);
+        }
+    }
+};
+
+// Animate Player Paddle
 function onKeyDown(e) {
     // up arrow key
     if (e.keyCode == 38) {
@@ -89,7 +139,7 @@ function onKeyDown(e) {
     }
 }
 
-// paddle event
+    // paddle event
 function addKeyEvents() {
     window.addEventListener('keydown', onKeyDown, true);
 }
@@ -139,21 +189,12 @@ Ball.prototype.step = function(table) {
         var computer_front = computer.x + computer.w;
         var computer_top = computer.y;
         var computer_bottom = computer.y + computer.h;
-        this.x += this.v.x;
-        this.y += this.v.y;
-        this.top = this.y - 5;
-        this.bottom = this.y + 5;
-        this.left = this.x - 5;
-        this.right = this.x + 5;
+        this.x += this.v.x * 2;
+        this.y += this.v.y * 2;
 
         // hits wall
         if (this.y <= this.radius || this.y >= table.h - this.radius) {
             this.v.y *= -1;
-        }
-
-        if (this.x <= -this.radius || this.x >= table.w + this.radius) {
-            table.resetRound();
-
         }
 
         // hits player paddle
@@ -171,15 +212,17 @@ Ball.prototype.step = function(table) {
         }
 };
 
+// Press 'Enter' to reload page / reset Ball
 var ball_reset = function() {
     location.reload();
 };
 
 // Instantiated Objects
 var ball = new Ball(canvas.width / 2, canvas.height / 2);
-var player = new Paddle(canvas.width - (20 + 15), (canvas.height - 90) / 2, 15, 90, 'blue');
-var computer = new Paddle(20, (canvas.height - 90) / 2, 15, 90, 'red');
+var player = new Paddle(canvas.width - (20 + 15), (canvas.height - 90) / 2, 15, 90, 'blue', false);
+var computer = new Paddle(20, (canvas.height - 90) / 2, 15, 90, 'red', true);
 var table = new Table(canvas.width, canvas.height);
+var score = new Score(0, 0);
 
 
 function renderAll(){
@@ -187,12 +230,14 @@ function renderAll(){
     ball.render(context);
     player.render(context);
     computer.render(context);
+    score.render(context);
 };
 
 var step = function() {
     animate(step);
     ball.step(table);
-
+    computer.update(ball);
+    score.update(ball);
     renderAll();
 };
 
