@@ -150,14 +150,14 @@ function Velocity() {
 }
 
 Velocity.prototype.randomize = function() {
-    // direction of player paddle
-    this.x = -1;
-    this.y = 0;
+    // uncomment for 'single direction of ball' || comment out & uncomment 'randomize direction of ball'
+    // this.x = -1;
+    // this.y = 0;
 
-    // to randomize direction
-    // var direction = 2 * Math.PI * Math.random();
-    // this.x = Math.cos(direction);
-    // this.y = Math.sin(direction);
+    // uncomment to 'randomize direction of ball' || comment out and uncomment 'single direction of ball'
+    var direction = 2 * Math.PI * Math.random();
+    this.x = Math.cos(direction);
+    this.y = Math.sin(direction);
 };
 
 function Ball(x, y) {
