@@ -1,0 +1,22 @@
+.landing {
+    float: left;
+    text-align: center;
+    color: #bbb;
+    background-color: #444;
+    height: 400px;
+    width: 600px;
+    margin: 10px 0 0 10px;
+    vertical-align: middle;
+}
+
+h2 {
+    margin-top: 5%;
+}
+
+li {
+    margin: 5px 0;
+}
+
+ul {
+    list-style-type: none;
+}
