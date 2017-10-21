@@ -19,22 +19,21 @@ function Score(x, y) {
 
 Score.prototype.update = function(ball) {
     // Scoring Conditional
-
-    // if (ball.x <= ball.radius) {
-    //     this.player_score += 1;
-    //     if (this.player_score == 11) {
-    //         alert("Player Wins!");
-    //         ball_reset();
-    //     }
-    //     table.resetRound();
-    // } else if (ball.x >= table.w + ball.radius) {
-    //     this.computer_score += 1;
-    //     if (this.computer_score == 11) {
-    //         alert("Computer Wins, better luck next time..");
-    //         ball_reset();
-    //     }
-    //     table.resetRound();
-    // }
+    if (ball.x <= ball.radius) {
+        this.player_score += 1;
+        if (this.player_score == 11) {
+            alert("Player Wins!");
+            ball_reset();
+        }
+        table.resetRound();
+    } else if (ball.x >= table.w + ball.radius) {
+        this.computer_score += 1;
+        if (this.computer_score == 11) {
+            alert("Computer Wins, better luck next time..");
+            ball_reset();
+        }
+        table.resetRound();
+    }
 };
 
 Score.prototype.render = function(context) {
